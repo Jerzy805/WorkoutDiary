@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TrainingDiary.Diary"
+             Title="Diary">
+
+    <ScrollView>
+        <StackLayout>
+
+        <Grid 
+            ColumnSpacing="10"
+            RowSpacing="10"
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border
+        Grid.Column="0"
+        Grid.Row="0">
+
+                <Entry x:Name="ExerciseNameEntry"
+               FontSize="20"
+               Placeholder="Exercise"/>
+
+            </Border>
+
+
+            <Border
+        Grid.Column="1"
+        Grid.Row="0">
+
+                <Entry x:Name="SetsEntry"
+               FontSize="20"
+               Placeholder="Sets"
+               Keyboard="Numeric"/>
+
+            </Border>
+
+            <Border
+        Grid.Column="2"
+        Grid.Row="0">
+
+                <Entry x:Name="RepsEntry"
+               FontSize="20"
+               Placeholder="Reps"
+               Keyboard="Numeric"/>
+
+            </Border>
+
+            <Border
+        Grid.Column="3"
+        Grid.ColumnSpan="2"
+        Grid.Row="1">
+
+                <DatePicker x:Name="DateEntry"
+               FontSize="20"/>
+
+            </Border>
+
+            <Border
+                Grid.Column="3"
+                Grid.ColumnSpan="2"
+                Grid.Row="0">
+
+                <Entry x:Name="WeightEntry"
+                       Grid.ColumnSpan="2"
+                       Placeholder="Weight"
+                       FontSize="20"/>
+
+            </Border>
+
+            <Border
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Grid.Row="1">
+
+                <Entry x:Name="CommentEntry"
+                       Placeholder="Comment"
+                       FontSize="20"/>
+
+            </Border>
+
+            <Button x:Name="AddButton"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="2"
+                    Clicked="AddButton_Clicked"
+                    FontSize="20"
+                    Text="Add"
+                    BackgroundColor="LightGreen"/>
+
+            <Label Grid.Column="3"
+                   Grid.ColumnSpan="2"
+                   Grid.Row="2"
+                   Text="Date"
+                   FontSize="30"
+                   HorizontalTextAlignment="Start"
+                   VerticalTextAlignment="End"/>
+
+            <BoxView
+                HeightRequest="1"
+                HorizontalOptions="FillAndExpand" 
+                VerticalOptions="FillAndExpand"
+                Grid.Row="3"
+                Grid.ColumnSpan="5"/>
+
+            <Label Grid.Column="0"
+                   Grid.Row="4"
+                   FontSize="23"
+                   Text="Trainings by:"/>
+
+            <Button x:Name="NameDateButton"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Grid.Row="4"
+                Clicked="NameDateButton_Clicked"
+                FontSize="20"
+                Text="Name"/>
+
+            <Border
+                Grid.Column="3"
+                Grid.ColumnSpan="2"
+                Grid.Row="4">
+
+                <DatePicker x:Name="DateSelector"
+                            DateSelected="DateSelector_DateSelected"
+                            Grid.ColumnSpan="2"
+                            FontSize="20"/>
+
+            </Border>
+
+            <Border
+                Grid.Column="3"
+                Grid.ColumnSpan="2"
+                Grid.Row="4">
+
+                <Picker x:Name="MuscleSelector"
+                        SelectedIndexChanged="MuscleSelector_SelectedIndexChanged"
+                            Grid.ColumnSpan="2"
+                            FontSize="20"/>
+
+            </Border>
+
+
+            <Label x:Name="NameDateLabel" 
+               Grid.Column="0"
+               Grid.Row="5"
+               FontSize="25"
+               Text="Exercise"
+                   Margin="0, 0, 0, 20"/>
+
+            <Label Grid.Column="1"
+               Grid.Row="5"
+               FontSize="25"
+               Text="Sets"
+                   Margin="0, 0, 0, 20"/>
+
+            <Label Grid.Column="2"
+                   Grid.ColumnSpan="2"
+               Grid.Row="5"
+               FontSize="25"
+               Text="Reps"
+                   Margin="0, 0, 0, 20"/>
+
+        </Grid>
+
+        <Grid x:Name="DynamicGrid"
+              ColumnSpacing="10"
+              RowSpacing="15">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+        </Grid>
+
+    </StackLayout>
+    </ScrollView>
+
+
+</ContentPage>
