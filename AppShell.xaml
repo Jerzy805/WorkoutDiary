@@ -17,4 +17,19 @@
         ContentTemplate="{DataTemplate local:Diary}"
         Route="Diary" />
 
+    <ShellContent
+        Title="Workout Planning"
+        ContentTemplate="{DataTemplate local:WorkoutPlanning}"
+        Route="WorkoutPlanning" />
+
+    <ShellContent
+        Title="Progress Tracking"
+        ContentTemplate="{DataTemplate local:ProgressTracking}"
+        Route="ProgressTracking"/>
+
+    <ShellContent
+        Title="Settings"
+        ContentTemplate="{DataTemplate local:Settings}"
+        Route="Settings"/>
+
 </Shell>

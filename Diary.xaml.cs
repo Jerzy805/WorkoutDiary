@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using TrainingDiary.Interfaces;
+﻿using TrainingDiary.Interfaces;
 using TrainingDiary.Models;
 namespace TrainingDiary;
 
@@ -8,6 +7,10 @@ public partial class Diary : ContentPage
 	private readonly IRepository repository;
 	public static List<Exercise> Exercises; // uzyskane poprzez async voida
 	public static bool isByName;
+	public static bool isNameCustom;
+	public static Button AddButton;
+	public static Button NameDateButton;
+	public static Grid DynamicGrid;
 	
 	public Diary()
 	{
@@ -18,15 +21,59 @@ public partial class Diary : ContentPage
 
 		MuscleSelector.ItemsSource = repository.GetMuscles();
 
-		ExerciseNameEntry.Text = SetsEntry.Text = RepsEntry.Text = 
+        ExerciseNamePicker.ItemsSource = repository.GetMuscles();
+
+        ExerciseNameEntry.Text = SetsEntry.Text = RepsEntry.Text = 
 			WeightEntry.Text = CommentEntry.Text = string.Empty;
 
 		MuscleSelector.IsVisible = false;
 		MuscleSelector.Title = "Exercise";
 
-        isByName = false;
+        ExerciseNamePicker.Title = "Exercise";
 
-		//DisplayExercises(Exercises);
+        isByName = false;
+		isNameCustom = false;
+
+		AddButton = new Button();
+		AddButton.Text = "Add";
+		AddButton.BackgroundColor = Colors.LightGreen;
+		AddButton.Clicked += (sender, e) =>
+		{
+			AddButton_Clicked();
+        };
+
+		NameDateButton = new Button();
+		NameDateButton.Text = "Name";
+		NameDateButton.Clicked += (sender, e) =>
+		{
+			NameDateButton_Clicked();
+        };
+
+		InputGrid.Add(AddButton, 0, 3);
+		InputGrid.SetColumnSpan(AddButton, 3);
+
+		InputGrid.Add(NameDateButton, 1, 5);
+		InputGrid.SetColumnSpan(NameDateButton, 2);
+
+        DynamicGrid = new Grid
+        {
+            ColumnSpacing = 10,
+            RowSpacing = 15
+        };
+
+        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
+        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+		stackLayout.Children.Add(DynamicGrid);
+
+        UpdateButtonsFontSize();
+
+		//DateSelectorChange();
+
+		MainPage.isDiaryLoaded = true;
     }
 
 	private async void GetExercises()
@@ -35,16 +82,32 @@ public partial class Diary : ContentPage
 		// metoda pomocnicza do obejścia ograniczeń konstruktora
 	}
 
-    private async void AddButton_Clicked(object sender, EventArgs e)
+    private async void AddButton_Clicked()
     {
-		if (ExerciseNameEntry.Text.Trim() == string.Empty || SetsEntry.Text.Trim() == string.Empty ||
+		var isCustomAndNull = isNameCustom && 
+			ExerciseNameEntry.Text.Trim() == string.Empty;
+
+		var isNotCustomAndNull = !isNameCustom && ExerciseNamePicker.SelectedItem == null;
+
+
+        if (isCustomAndNull || isNotCustomAndNull || SetsEntry.Text.Trim() == string.Empty ||
 			RepsEntry.Text.Trim() == string.Empty || WeightEntry.Text == string.Empty)
 		{
-			await DisplayAlert("Training Diary", "Entries cannot be empty.", "Ok");
+			await DisplayAlert("Workout Diary", "Entries cannot be empty.", "Ok");
 			return;
 		}
 
-		var name = ExerciseNameEntry.Text.Trim();
+		string name;
+
+		if (isNameCustom)
+		{
+            name = ExerciseNameEntry.Text.Trim();
+        }
+		else
+		{
+			name = ExerciseNamePicker.SelectedItem!.ToString()!;
+		}
+
 		var sets = Convert.ToInt32(SetsEntry.Text);
 		var reps = Convert.ToInt32(RepsEntry.Text);
 		var weight = WeightEntry.Text.Trim();
@@ -58,6 +121,8 @@ public partial class Diary : ContentPage
 		await repository.SaveExercisesAsync(Exercises);
 
 		MuscleSelector.ItemsSource = await repository.GetMusclesAsync();
+
+		ExerciseNamePicker.ItemsSource = await repository.GetMusclesAsync();
 
         ExerciseNameEntry.Text = SetsEntry.Text = RepsEntry.Text =
             WeightEntry.Text = CommentEntry.Text = string.Empty;
@@ -74,7 +139,7 @@ public partial class Diary : ContentPage
 		}
     }
 
-    private void NameDateButton_Clicked(object sender, EventArgs e)
+    private void NameDateButton_Clicked()
     {
 		if (isByName)
 		{
@@ -106,6 +171,42 @@ public partial class Diary : ContentPage
         }
     }
 
+	public static void UpdateButtonsFontSize()
+	{
+		NameDateButton.FontSize = 20 * MainPage.fontSize;
+        AddButton.FontSize = 20 * MainPage.fontSize;
+    }
+
+	public static void UpdateLabelsFontSize()
+	{
+		var labels = DynamicGrid.OfType<Label>();
+
+		foreach (var label in labels)
+		{
+			label.FontSize = 20 * MainPage.fontSize;
+		}
+	}
+
+    private void CustomMuscleNameSelector_Clicked(object sender, EventArgs e)
+    {
+		if (isNameCustom)
+		{
+            isNameCustom = false;
+            ExerciseNameEntryBorder.IsVisible = ExerciseNameEntry.IsVisible = false;
+            ExerciseNamePickerBorder.IsVisible = ExerciseNamePicker.IsVisible = true;
+
+			CustomMuscleNameSelector.Text = "Click to enter custom exercise name";
+        }
+		else
+		{
+			isNameCustom = true;
+            ExerciseNameEntryBorder.IsVisible = ExerciseNameEntry.IsVisible = true;
+			ExerciseNamePickerBorder.IsVisible = ExerciseNamePicker.IsVisible = false;
+
+            CustomMuscleNameSelector.Text = "Click to select exercise from the picker";
+        }
+    }
+
     private void DateSelector_DateSelected(object sender, DateChangedEventArgs e)
     {
 		DateSelectorChange();
@@ -123,15 +224,16 @@ public partial class Diary : ContentPage
             return;
         }
 
-        var exercises = Exercises.Where(e => e.Name == MuscleSelector.SelectedItem.ToString()).ToList();
+        var exercises = Exercises.Where(e => e.Name == MuscleSelector.SelectedItem.ToString())
+			.OrderByDescending(e => e.Date).ToList();
 
         DisplayExercises(exercises);
     }
 
     private void DateSelectorChange()
 	{
-        var exercises = Exercises.Where(e => e.Date.DayOfYear == DateSelector.Date.DayOfYear
-                && e.Date.Year == DateSelector.Date.Year).ToList();
+		var exercises = Exercises.Where(e => e.Date.DayOfYear == DateSelector.Date.DayOfYear
+				&& e.Date.Year == DateSelector.Date.Year).ToList();
 
         DisplayExercises(exercises);
     }
@@ -153,7 +255,7 @@ public partial class Diary : ContentPage
 			int row = exercises.IndexOf(exercise);
 
 			var idLabel = new Label();
-			idLabel.FontSize = 20;
+			idLabel.FontSize = 20 * MainPage.fontSize;
 
 			if (isByName)
 			{
@@ -165,12 +267,12 @@ public partial class Diary : ContentPage
 			}
 
 			var setsLabel = new Label();
-			setsLabel.FontSize = 20;
+			setsLabel.FontSize = 20 * MainPage.fontSize;
 			setsLabel.Text = exercise.Sets.ToString();
 
 			var repsLabel = new Label();
-			repsLabel.FontSize = 20;
-			repsLabel.Text = exercise.Reps.ToString();
+			repsLabel.FontSize = 20 * MainPage.fontSize;
+            repsLabel.Text = exercise.Reps.ToString();
 
             var editButton = new Button();
             editButton.Text = "✏️";
@@ -180,13 +282,29 @@ public partial class Diary : ContentPage
 			infoButton.Text = "ⓘ";
 			infoButton.FontSize = 20;
 
-			infoButton.Clicked += async (sender, e) =>
+            var controls = new List<IView>
 			{
-				var ifKeep = await DisplayAlert("Training Diary", $"{exercise.Name}{Environment.NewLine}{exercise.GetDate()}" +
-					$"{Environment.NewLine}{exercise.Sets} sets for {exercise.Reps} reps{Environment.NewLine}{exercise.Weight}" +
-					$"{Environment.NewLine}{exercise.Comment}", "Ok", "Delete");
+				idLabel,
+				setsLabel,
+				repsLabel,
+				editButton,
+				infoButton
+			};
 
-				if (!ifKeep)
+            infoButton.Clicked += async (sender, e) =>
+			{
+                var comment = exercise.Comment;
+
+                if (comment == string.Empty)
+                {
+                    comment = "No comment";
+                }
+
+                var ifKeep = await DisplayAlert(exercise.Name, $"{exercise.GetDate()}" +
+                    $"{Environment.NewLine}{exercise.Sets} sets for {exercise.Reps} reps{Environment.NewLine}{exercise.Weight}" +
+                    $"{Environment.NewLine}{comment}", "Ok", "Delete");
+
+                if (!ifKeep)
 				{
 					Exercises.Remove(exercise);
 					exercises.Remove(exercise);
@@ -194,26 +312,32 @@ public partial class Diary : ContentPage
 
 					//MuscleSelector.ItemsSource = await repository.GetMusclesAsync();
 
-                    DynamicGrid.Remove(idLabel);
-                    DynamicGrid.Remove(setsLabel);
-                    DynamicGrid.Remove(repsLabel);
-                    DynamicGrid.Remove(editButton);
-                    DynamicGrid.Remove(infoButton);
+					var tasks = new List<Task>();
 
-                    DynamicGrid.Children.Remove(idLabel);
-                    DynamicGrid.Children.Remove(setsLabel);
-                    DynamicGrid.Children.Remove(repsLabel);
-                    DynamicGrid.Children.Remove(editButton);
-                    DynamicGrid.Children.Remove(infoButton);
+					var bindableObject = sender as BindableObject;
+
+                    foreach (var control in controls)
+					{
+						var task = Task.Run(async () =>
+						{
+							await bindableObject!.Dispatcher.DispatchAsync(() =>
+							{
+                                DynamicGrid.Remove(control);
+                                DynamicGrid.Children.Remove(control);
+                            });
+						});
+
+						tasks.Add(task);
+					}
+
+					await Task.WhenAll(tasks);
 
                     DynamicGrid.RowDefinitions.RemoveAt(row);
-
-                    //DisplayExercises(exercises);
 				}
 				
 			};
 
-			editButton.Clicked += (sender, e) =>
+			editButton.Clicked += async (sender, e) =>
 			{
 				idLabel.IsVisible = setsLabel.IsVisible = repsLabel.IsVisible
 				= infoButton.IsVisible = editButton.IsVisible = false;
@@ -225,42 +349,71 @@ public partial class Diary : ContentPage
 
 				if (isByName)
 				{
-					changeDatePicker.FontSize = 20;
-					changeDatePicker.Date = exercise.Date;
+					changeDatePicker.FontSize = 20 * MainPage.fontSize;
+                    changeDatePicker.Date = exercise.Date;
 
 					DynamicGrid.Add(changeDatePicker, 0, row);
 				}
 				else
 				{
-					changeNameEntry.FontSize = 20;
-					changeNameEntry.Text = exercise.Name;
+					changeNameEntry.FontSize = 20 * MainPage.fontSize;
+                    changeNameEntry.Text = exercise.Name;
 					changeNameEntry.Placeholder = "Exercise";
 
 					DynamicGrid.Add(changeNameEntry, 0, row);
 				}
 
 				var changeSetsEntry = new Entry();
-				changeSetsEntry.FontSize = 20;
-				changeSetsEntry.Placeholder = "Sets";
+				changeSetsEntry.FontSize = 20 * MainPage.fontSize;
+                changeSetsEntry.Placeholder = "Sets";
 				changeSetsEntry.Keyboard = Keyboard.Numeric;
 				changeSetsEntry.Text = exercise.Sets.ToString();
 
 				var changeRepsEntry = new Entry();
-                changeRepsEntry.FontSize = 20;
+                changeRepsEntry.FontSize = 20 * MainPage.fontSize;
                 changeRepsEntry.Placeholder = "Reps";
                 changeRepsEntry.Keyboard = Keyboard.Numeric;
                 changeRepsEntry.Text = exercise.Reps.ToString();
 
 				var changeWeightEntry = new Entry();
-				changeWeightEntry.FontSize = 20;
-				changeWeightEntry.Placeholder = "Weight";
+				changeWeightEntry.FontSize = 20 * MainPage.fontSize;
+                changeWeightEntry.Placeholder = "Weight";
 				changeWeightEntry.Text = exercise.Weight;
+
+				var changeCommentEntry = new Entry();
+				changeCommentEntry.FontSize = 20 * MainPage.fontSize;
+                changeCommentEntry.Text = exercise.Comment;
+				changeCommentEntry.Placeholder = "Comment";
 
 				var acceptButton = new Button();
 				acceptButton.FontSize = 20;
 				acceptButton.Text = "✔️";
 
-				acceptButton.Clicked += async (sender, e) =>
+				var controlsToPushDown = DynamicGrid.Children.Where(c => DynamicGrid.GetRow(c) > row);
+
+				var tasks = new List<Task>();
+
+				var bindableObject = sender as BindableObject;
+
+				foreach (var control in controlsToPushDown)
+				{
+					var task = Task.Run(async () =>
+					{
+                        await bindableObject.Dispatcher.DispatchAsync(() =>
+                        {
+                            int currentRow = DynamicGrid.GetRow(control);
+                            DynamicGrid.SetRow(control, currentRow + 1);
+                        });
+                    });
+
+					tasks.Add(task);
+				}
+
+				await Task.WhenAll(tasks);
+
+				DynamicGrid.AddRowDefinition(new RowDefinition { Height = GridLength.Auto });
+
+                acceptButton.Clicked += async (sender, e) =>
 				{
                     bool isIncorrect;
 
@@ -280,7 +433,7 @@ public partial class Diary : ContentPage
 
                     if (isIncorrect)
 					{
-						await DisplayAlert("hehe", "ale frajer", "wypierdalaj");
+						await DisplayAlert("Workout Diary", "Fill all the data.", "Ok");
 						return;
 					}
 
@@ -296,15 +449,24 @@ public partial class Diary : ContentPage
 					exercise.Sets = sets;
 					exercise.Reps = reps;
 					exercise.Weight = changeWeightEntry.Text.Trim();
+					exercise.Comment = changeCommentEntry.Text.Trim();
 
 					await repository.SaveExercisesAsync(Exercises);
 
 					MuscleSelector.ItemsSource = await repository.GetMusclesAsync();
+                    ExerciseNamePicker.ItemsSource = await repository.GetMusclesAsync();
 
-					DynamicGrid.Children.Remove(changeRepsEntry);
+                    DynamicGrid.Children.Remove(changeRepsEntry);
                     DynamicGrid.Children.Remove(changeSetsEntry);
                     DynamicGrid.Children.Remove(changeWeightEntry);
 					DynamicGrid.Children.Remove(acceptButton);
+					DynamicGrid.Children.Remove(changeCommentEntry);
+
+					foreach (var control in controlsToPushDown)
+					{
+						int currentRow = DynamicGrid.GetRow(control);
+						DynamicGrid.SetRow(control, currentRow - 1);
+					}
 
 					if (isByName)
 					{
@@ -328,6 +490,8 @@ public partial class Diary : ContentPage
                 DynamicGrid.Add(changeRepsEntry, 2, row);
                 DynamicGrid.Add(changeWeightEntry, 3, row);
 				DynamicGrid.Add(acceptButton, 4, row);
+				DynamicGrid.Add(changeCommentEntry, 0, row + 1);
+				DynamicGrid.SetColumnSpan(changeCommentEntry, 5);
 
             };
 

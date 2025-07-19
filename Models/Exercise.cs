@@ -40,5 +40,15 @@ namespace TrainingDiary.Models
         {
             return Date.ToString("dd-MM-yyyy");
         }
+
+        public string GetSets()
+        {
+            return Sets.ToString();
+        }
+
+        public string GetReps()
+        {
+            return Reps.ToString();
+        }
     }
 }

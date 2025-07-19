@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TrainingDiary.Settings"
+             Title="Settings">
+    <ScrollView>
+        <StackLayout x:Name="stackLayout">
+
+            <Grid x:Name="UserGrid"
+                  ColumnSpacing="10"
+                  RowSpacing="20">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                </Grid.RowDefinitions>
+
+            </Grid>
+
+            <Grid x:Name="MuscleGrid"
+                  ColumnSpacing="10"
+                  RowSpacing="20">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+
+                <Button x:Name="EditMusclesButton"
+                        Grid.ColumnSpan="5"
+                        Margin="35, 5"
+                        FontSize="24"
+                        Text="Edit exercises"
+                        Clicked="EditMusclesButton_Clicked"/>
+
+                <Label x:Name="InfoLabel"
+                       Grid.ColumnSpan="5"
+                       Grid.Row="1"
+                       FontSize="22"
+                       Margin="40, 0"
+                       Text="Exercises sorted by number of doing them"
+                       IsVisible="False"
+                       HorizontalTextAlignment="Center"/>
+
+                <BoxView x:Name="boxView"
+                         Grid.ColumnSpan="5"
+                         Grid.Row="2"
+                         HeightRequest="1"
+                         IsVisible="False"/>
+            </Grid>
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

@@ -21,7 +21,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>TrainingDiary</ApplicationTitle>
+		<ApplicationTitle>Workout Diary</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.trainingdiary</ApplicationId>
@@ -77,6 +77,15 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Diary.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ProgressTracking.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Settings.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="WorkoutPlanning.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

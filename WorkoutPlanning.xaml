@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TrainingDiary.WorkoutPlanning"
+             Title="Workout Planning">
+    <ScrollView>
+        <StackLayout x:Name="stackLayout">
+
+            <Grid x:Name="InputGrid"
+                ColumnSpacing="10"
+                RowSpacing="10">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+
+                <Button x:Name="SeeWorkoutsButton"
+                        Grid.Row="0"
+                        Grid.ColumnSpan="5"
+                        Clicked="SeeWorkoutsButton_Clicked"
+                        FontSize="20"
+                        Text="See existing workouts"
+                        Margin="20, 0"/>
+
+                <Border x:Name="WorkoutNameEntryBorder"
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Margin="0, 8">
+
+                    <Entry x:Name="WorkoutNameEntry"
+                           FontSize="20"
+                           Placeholder="Workout name"/>
+
+                </Border>
+
+                <Border x:Name="WorkoutNamePickerBorder"
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Margin="0, 8"
+                        IsVisible="False">
+
+                    <Picker x:Name="WorkoutNamePicker"
+                            FontSize="20"
+                            Title="Workout name"
+                            SelectedIndexChanged="WorkoutNamePicker_SelectedIndexChanged"
+                            IsVisible="False"/>
+
+                </Border>
+
+                <Border Grid.Column="1"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="0, 8">
+
+                    <DatePicker x:Name="WorkoutDatePicker"
+                                FontSize="20"/>
+
+                </Border>
+
+                <Button x:Name="GetReadyButton"
+                    Grid.Column="3"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="1"
+                        FontSize="20"
+                        Clicked="GetReadyButton_Clicked"
+                        Text="✔️"
+                        Margin ="10, 8"/>
+
+                <Button x:Name="CustomSwitch"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="5"
+                        Margin="10, 0"
+                        Clicked="CustomSwitch_Clicked"
+                        FontSize="20"
+                        Text="Click to enter custom exercise name"/>
+
+                <Border x:Name="ExerciseNamePickerBorder"
+                        Grid.Column="0"
+                        Grid.Row="3">
+
+                    <Picker x:Name="ExerciseNamePicker"
+                            FontSize="20"
+                            Title="Exercise"/>
+
+                </Border>
+
+                <Border x:Name="ExerciseNameEntryBorder"
+                        Grid.Column="0"
+                        Grid.Row="3"
+                        IsVisible="False">
+
+                    <Entry x:Name="ExerciseNameEntry"
+                           FontSize="20"
+                           Placeholder="Exercise"
+                           IsVisible="False"/>
+
+                </Border>
+
+                <Border Grid.Column="1"
+                        Grid.Row="3">
+
+                    <Entry x:Name="SetsEntry"
+                           FontSize="20"
+                           Keyboard="Numeric"
+                           Placeholder="Sets"/>
+
+                </Border>
+
+                <Border Grid.Column="2"
+                    Grid.Row="3">
+
+                    <Entry x:Name="RepsEntry"
+                           FontSize="20"
+                           Placeholder="Reps"
+                           Keyboard="Numeric"/>
+
+                </Border>
+
+                <Border Grid.Column="3"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="3">
+
+                    <Entry x:Name="WeightEntry"
+                       FontSize="20"
+                       Placeholder="Weight"/>
+
+                </Border>
+
+                <Border Grid.Row="4"
+                        Grid.ColumnSpan="5">
+
+                    <Entry x:Name="CommentEntry"
+                           FontSize="20"
+                           Placeholder="Comment (optional)"/>
+
+
+                </Border>
+
+                <Button x:Name="AddExerciseButton"
+                        Grid.ColumnSpan="5"
+                        Grid.Row="5"
+                        Margin="15, 0"
+                        Clicked="AddExerciseButton_Clicked"
+                        FontSize="20"
+                        Text="Add exercise to the workout"/>
+
+                <Label Grid.Row="6"
+                       Grid.Column="0"
+                       FontSize="22"
+                       Text="Exercise"/>
+
+                <Label Grid.Column="1"
+                       Grid.Row="6"
+                       FontSize="22"
+                       Text="Sets"/>
+
+                <Label Grid.Column="2"
+                       Grid.Row="6"
+                       FontSize="22"
+                       Text="Reps"/>
+
+                <BoxView Grid.Row="7"
+                         Grid.ColumnSpan="5"
+                         HeightRequest="1"/>
+
+            </Grid>
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
