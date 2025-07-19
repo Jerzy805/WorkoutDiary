@@ -22,6 +22,15 @@ namespace TrainingDiary
         {
             InitializeComponent();
 
+            var navPage = Application.Current.MainPage as NavigationPage;
+            if (navPage != null)
+            {
+                navPage.BarBackgroundColor = Color.FromArgb("#e55d13");
+                navPage.BarTextColor = Colors.LightGreen;
+            }
+
+            //this.Navigation.
+
             repository = new Repository();
 
             user = repository.GetUser();
