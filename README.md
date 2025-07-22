@@ -1,0 +1,1 @@
+Actual name of the Application is "Workout Diary", but when I started this project my original idea was to call it "Training Diary", so that's where the difference between project name and app name comes from.
