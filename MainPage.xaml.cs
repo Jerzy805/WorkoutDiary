@@ -22,15 +22,6 @@ namespace TrainingDiary
         {
             InitializeComponent();
 
-            var navPage = Application.Current.MainPage as NavigationPage;
-            if (navPage != null)
-            {
-                navPage.BarBackgroundColor = Color.FromArgb("#e55d13");
-                navPage.BarTextColor = Colors.LightGreen;
-            }
-
-            //this.Navigation.
-
             repository = new Repository();
 
             user = repository.GetUser();
@@ -98,43 +89,6 @@ namespace TrainingDiary
             stackLayout.Add(WelcomeLabel2);
             stackLayout.Add(fontSizeSlider);
             stackLayout.Add(infoLabel);
-
-            //var filePicker = new Button();
-            //filePicker.FontSize = 22 * fontSize;
-            //filePicker.Text = "Pick a file";
-
-            //filePicker.Clicked += async (sender, e) =>
-            //{
-            //    var result = await FilePicker.PickAsync(new PickOptions
-            //    {
-            //        PickerTitle = "Wybierz plik"
-            //    });
-
-            //    if (result != null)
-            //    {
-            //        string filePath = result.FullPath;
-            //        var data = await File.ReadAllTextAsync(filePath);
-
-            //        var workouts = JsonConvert.DeserializeObject<List<Workout>>(data);
-
-            //        await repository.SaveWorkoutsAsync(workouts);
-
-            //        //var sessions = JsonConvert.DeserializeObject<List<Session>>(data);
-
-            //        //var exercises = new List<Exercise>();
-
-            //        //foreach (var session in sessions)
-            //        //{
-            //        //    exercises.Add(session.TransferToExercise());
-            //        //}
-
-            //        //await repository.SaveExercisesAsync(exercises);
-
-            //        await DisplayAlert("Workout Diary", "Pomyślnie przywrócono dane", "Ok");
-            //    }
-            //};
-
-            //stackLayout.Add(filePicker);
 
             var texts = new List<string>()
             {
@@ -359,7 +313,6 @@ namespace TrainingDiary
             foreach (var button in buttons)
             {
                 button.FontSize = 25 * fontSize;
-                //button.HeightRequest = 5 * button.FontSize;
             } 
         }
     }
