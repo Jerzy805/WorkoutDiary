@@ -74,6 +74,8 @@ public partial class Diary : ContentPage
 		//DateSelectorChange();
 
 		MainPage.isDiaryLoaded = true;
+
+		DateSelectorChange();
     }
 
 	private async void GetExercises()
@@ -330,9 +332,30 @@ public partial class Diary : ContentPage
 						tasks.Add(task);
 					}
 
-					await Task.WhenAll(tasks);
+                    var controlsToPushUp = DynamicGrid.Children.Where(c => DynamicGrid.GetRow(c) > row);
 
-                    DynamicGrid.RowDefinitions.RemoveAt(row);
+					if (controlsToPushUp.Any())
+					{
+                        foreach (var control in controlsToPushUp)
+                        {
+                            var task = Task.Run(async () =>
+                            {
+                                await bindableObject.Dispatcher.DispatchAsync(() =>
+                                {
+                                    int currentRow = DynamicGrid.GetRow(control);
+                                    DynamicGrid.SetRow(control, currentRow - 1);
+                                });
+                            });
+
+                            tasks.Add(task);
+                        }
+                    }
+
+                    await Task.WhenAll(tasks);
+
+					DynamicGrid.RowDefinitions.RemoveAt(exercises.Count - 1);
+
+                    //DynamicGrid.RowDefinitions.RemoveAt(row);
 				}
 				
 			};

@@ -331,9 +331,12 @@ public partial class WorkoutPlanning : ContentPage
                 infoButton
             };
 
+            int localRow = row;
+            var localControls = controls.ToList();
+            var localExercise = exercise;
+
             editButton.Clicked += async (sender, e) =>
             {
-				// ukrycie kontrolek
                 foreach (var view in controls)
                 {
                     if (view is View v)
@@ -343,7 +346,6 @@ public partial class WorkoutPlanning : ContentPage
                 }
 
                 var dynamicGridButtons = DynamicGrid.Children.OfType<Button>().Where(b => b.Text == "✏️");
-
                 if (dynamicGridButtons.Any())
                 {
                     foreach (var button in dynamicGridButtons)
@@ -352,88 +354,48 @@ public partial class WorkoutPlanning : ContentPage
                     }
                 }
 
-                // deklaracja narzędzi do edycji
+                var controlsToPushDown = DynamicGrid.Children.Where(c => DynamicGrid.GetRow(c) > row).ToList();
 
                 var changeNameEntry = new Entry();
-				changeNameEntry.FontSize = 20 * MainPage.fontSize;
+                changeNameEntry.FontSize = 20 * MainPage.fontSize;
                 changeNameEntry.Text = exercise.Name;
-				changeNameEntry.Placeholder = "Exercise";
+                changeNameEntry.Placeholder = "Exercise";
 
-				var changeSetsEntry = new Entry();
-				changeSetsEntry.FontSize = 20 * MainPage.fontSize;
+                var changeSetsEntry = new Entry();
+                changeSetsEntry.FontSize = 20 * MainPage.fontSize;
                 changeSetsEntry.Text = exercise.Sets.ToString();
-				changeSetsEntry.Placeholder = "Sets";
-				changeSetsEntry.Keyboard = Keyboard.Numeric;
+                changeSetsEntry.Placeholder = "Sets";
+                changeSetsEntry.Keyboard = Keyboard.Numeric;
 
-				var changeRepsEntry = new Entry();
-				changeRepsEntry.FontSize = 20 * MainPage.fontSize;
+                var changeRepsEntry = new Entry();
+                changeRepsEntry.FontSize = 20 * MainPage.fontSize;
                 changeRepsEntry.Text = exercise.Reps.ToString();
-				changeRepsEntry.Placeholder = "Reps";
-				changeRepsEntry.Keyboard = Keyboard.Numeric;
+                changeRepsEntry.Placeholder = "Reps";
+                changeRepsEntry.Keyboard = Keyboard.Numeric;
 
-				var changeWeightEntry = new Entry();
-				changeWeightEntry.FontSize = 20 * MainPage.fontSize;
+                var changeWeightEntry = new Entry();
+                changeWeightEntry.FontSize = 20 * MainPage.fontSize;
                 changeWeightEntry.Text = exercise.Weight;
-				changeWeightEntry.Placeholder = "Weight";
-
-                var acceptButton = new Button();
-                acceptButton.FontSize = 20;
-                acceptButton.Text = "✔️";
+                changeWeightEntry.Placeholder = "Weight";
 
                 var changeCommentEntry = new Entry();
                 changeCommentEntry.FontSize = 20 * MainPage.fontSize;
                 changeCommentEntry.Text = exercise.Comment;
                 changeCommentEntry.Placeholder = "Comment (optional)";
 
-				// przesunięcie pozostałych kontrolek w dół, żeby zrobić miejsce na narzędzia do edycji
+                var acceptButton = new Button();
+                acceptButton.FontSize = 20;
+                acceptButton.Text = "✔️";
 
-                var controlsToPushDown = DynamicGrid.Children.Where(c => DynamicGrid.GetRow(c) > row);
+                var deleteButton = new Button();
+                deleteButton.FontSize = 20;
+                deleteButton.Text = "🗑️";
+                deleteButton.BackgroundColor = Colors.Red;
 
-                var tasks = new List<Task>();
-
-                var bindableObject = sender as BindableObject;
-
-                foreach (var control in controlsToPushDown)
+                deleteButton.Clicked += async (sender, e) =>
                 {
-                    var task = Task.Run(async () =>
-                    {
-                        await bindableObject.Dispatcher.DispatchAsync(() =>
-                        {
-                            int currentRow = DynamicGrid.GetRow(control);
-                            DynamicGrid.SetRow(control, currentRow + 1);
-                        });
-                    });
-
-                    tasks.Add(task);
-                }
-
-                await Task.WhenAll(tasks);
-
-                DynamicGrid.AddRowDefinition(new RowDefinition { Height = GridLength.Auto });
-
-				acceptButton.Clicked += async (sender, e) =>
-				{
-					//var isNameOk = changeNameEntry.Text.Trim() != string.Empty;
-					//var isSetOk = !int.TryParse(changeSetsEntry.Text, out int set);
-					//var isRepOk = !int.TryParse(changeRepsEntry.Text, out int rep);
-					//var isWeightOk = changeWeightEntry.Text.Trim() != string.Empty;
-
-					//await DisplayAlert("test", $"nazwa:{isNameOk} sety:{isSetOk} repy:{isRepOk} waga: {isWeightOk}", "Ok");
-
-                    if (changeNameEntry.Text.Trim() == string.Empty || !int.TryParse(changeSetsEntry.Text, out int sets) ||
-						!int.TryParse(changeRepsEntry.Text, out int reps) || changeWeightEntry.Text.Trim() == string.Empty)
-					{
-                        await DisplayAlert("Workout Diary", "Fill all the data.", "Ok");
-                        return;
-                    }
-
-					exercise.Name = changeNameEntry.Text.Trim();
-					exercise.Sets = sets;
-					exercise.Reps = reps;
-					exercise.Weight = changeWeightEntry.Text.Trim();
-
-					await repository.SaveWorkoutsAsync(this.Workouts);
-                    WorkoutNamePicker.ItemsSource = await repository.GetWorkoutNamesAsync();
+                    workout.Exercises.Remove(exercise);
+                    await repository.SaveWorkoutsAsync(this.Workouts);
 
                     DynamicGrid.Children.Remove(changeNameEntry);
                     DynamicGrid.Children.Remove(changeRepsEntry);
@@ -441,24 +403,18 @@ public partial class WorkoutPlanning : ContentPage
                     DynamicGrid.Children.Remove(changeWeightEntry);
                     DynamicGrid.Children.Remove(acceptButton);
                     DynamicGrid.Children.Remove(changeCommentEntry);
+                    DynamicGrid.Remove(deleteButton);
+
+                    foreach (var control in controls)
+                    {
+                        DynamicGrid.Remove(control);
+                    }
 
                     foreach (var control in controlsToPushDown)
                     {
                         int currentRow = DynamicGrid.GetRow(control);
-                        DynamicGrid.SetRow(control, currentRow - 1);
+                        DynamicGrid.SetRow(control, currentRow - 3);
                     }
-
-                    foreach (var view in controls)
-                    {
-                        if (view is View v)
-                        {
-                            v.IsVisible = true;
-                        }
-                    }
-
-					nameLabel.Text = exercise.Name;
-					setsLabel.Text = exercise.GetSets();
-					repsLabel.Text = exercise.GetReps();
 
                     if (dynamicGridButtons.Any())
                     {
@@ -469,14 +425,91 @@ public partial class WorkoutPlanning : ContentPage
                     }
                 };
 
-				DynamicGrid.Add(changeNameEntry, 0, row);
+                var tasks = new List<Task>();
+                var bindableObject = sender as BindableObject;
+
+                foreach (var control in controlsToPushDown)
+                {
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        await bindableObject.Dispatcher.DispatchAsync(() =>
+                        {
+                            int currentRow = DynamicGrid.GetRow(control);
+                            DynamicGrid.SetRow(control, currentRow + 2);
+                        });
+                    }));
+                }
+
+                await Task.WhenAll(tasks);
+
+                DynamicGrid.AddRowDefinition(new RowDefinition { Height = GridLength.Auto });
+                DynamicGrid.AddRowDefinition(new RowDefinition { Height = GridLength.Auto });
+
+                acceptButton.Clicked += async (s2, e2) =>
+                {
+                    if (changeNameEntry.Text.Trim() == string.Empty ||
+                        !int.TryParse(changeSetsEntry.Text, out int sets) ||
+                        !int.TryParse(changeRepsEntry.Text, out int reps) ||
+                        changeWeightEntry.Text.Trim() == string.Empty)
+                    {
+                        await DisplayAlert("Workout Diary", "Fill all the data.", "Ok");
+                        return;
+                    }
+
+                    exercise.Name = changeNameEntry.Text.Trim();
+                    exercise.Sets = sets;
+                    exercise.Reps = reps;
+                    exercise.Weight = changeWeightEntry.Text.Trim();
+                    exercise.Comment = changeCommentEntry.Text.Trim();
+
+                    await repository.SaveWorkoutsAsync(this.Workouts);
+                    WorkoutNamePicker.ItemsSource = await repository.GetWorkoutNamesAsync();
+
+                    DynamicGrid.Children.Remove(changeNameEntry);
+                    DynamicGrid.Children.Remove(changeRepsEntry);
+                    DynamicGrid.Children.Remove(changeSetsEntry);
+                    DynamicGrid.Children.Remove(changeWeightEntry);
+                    DynamicGrid.Children.Remove(acceptButton);
+                    DynamicGrid.Children.Remove(changeCommentEntry);
+                    DynamicGrid.Remove(deleteButton);
+
+                    foreach (var control in controlsToPushDown)
+                    {
+                        int currentRow = DynamicGrid.GetRow(control);
+                        DynamicGrid.SetRow(control, currentRow - 2);
+                    }
+
+                    foreach (var view in controls)
+                    {
+                        if (view is View v)
+                        {
+                            v.IsVisible = true;
+                        }
+                    }
+
+                    nameLabel.Text = exercise.Name;
+                    setsLabel.Text = exercise.GetSets();
+                    repsLabel.Text = exercise.GetReps();
+
+                    if (dynamicGridButtons.Any())
+                    {
+                        foreach (var button in dynamicGridButtons)
+                        {
+                            button.IsEnabled = true;
+                        }
+                    }
+                };
+
+                DynamicGrid.Add(changeNameEntry, 0, row);
                 DynamicGrid.Add(changeSetsEntry, 1, row);
                 DynamicGrid.Add(changeRepsEntry, 2, row);
                 DynamicGrid.Add(changeWeightEntry, 3, row);
                 DynamicGrid.Add(acceptButton, 4, row);
                 DynamicGrid.Add(changeCommentEntry, 0, row + 1);
-                DynamicGrid.SetColumnSpan(changeCommentEntry, 5);
+                DynamicGrid.Add(deleteButton, 4, row + 1);
+                DynamicGrid.SetColumnSpan(changeCommentEntry, 4);
             };
+
 
             infoButton.Clicked += async (sender, e) =>
             {
@@ -487,41 +520,77 @@ public partial class WorkoutPlanning : ContentPage
                     comment = "No comment";
                 }
 
-                var ifKeep = await DisplayAlert(exercise.Name, $"{exercise.Sets} " +
-                    $"sets for {exercise.Reps} reps{Environment.NewLine}{exercise.Weight}" +
-                    $"{Environment.NewLine}{comment}", "Ok", "Delete");
+                string action = await DisplayActionSheet(
+                    $"{exercise.Name} ({exercise.Sets} x {exercise.Reps}), {exercise.Weight}",
+                    null,
+                    null,
+                    "⬆️", "⬇️", "Ok");
 
-                if (!ifKeep)
+                switch (action)
                 {
-                    workout.Exercises.Remove(exercise);
-					await repository.SaveWorkoutsAsync(Workouts);
-
-                    WorkoutNamePicker.ItemsSource = await repository.GetWorkoutNamesAsync();
-
-                    var tasks = new List<Task>();
-
-                    var bindableObject = sender as BindableObject;
-
-                    foreach (var control in controls)
-                    {
-                        var task = Task.Run(async () =>
+                    case "⬆️":
+                        if (row > 0)
                         {
-                            await bindableObject.Dispatcher.DispatchAsync(() =>
-                            {
-                                DynamicGrid.Remove(control);
-                                DynamicGrid.Children.Remove(control);
-                            });
-                        });
+                            var upperExercise = workout.Exercises[row - 1];
+                            workout.Exercises[row - 1] = exercise;
+                            workout.Exercises[row] = upperExercise;
 
-                        tasks.Add(task);
-                    }
-                    await Task.WhenAll(tasks);
+                            await repository.SaveWorkoutsAsync(this.Workouts);
 
-                    DynamicGrid.RowDefinitions.RemoveAt(row);
+                            DisplayExercisesOfTheWorkout(workout);
 
-                    //DisplayExercises(exercises);
+                            //var controlsUpper = DynamicGrid.Children.OfType<IView>().Where(i => DynamicGrid.GetRow(i) == row - 1).ToList();
+
+                            //foreach (var control in controlsUpper)
+                            //{
+                            //    DynamicGrid.SetRow(control, row);
+                            //}
+
+                            //foreach (var control in controls)
+                            //{
+                            //    DynamicGrid.SetRow(control, row - 1);
+                            //}
+
+                            // zakomentowane ponieważ powodowało problemy z edycją danych
+                                
+                        }
+                        else
+                        {
+                            await DisplayAlert("Workout Diary", "This exercise is already at the top.", "Ok");
+                        }
+                        break;
+
+                    case "⬇️":
+                        if (row < workout.Exercises.Count - 1)
+                        {
+                            var lowerExercise = workout.Exercises[row + 1];
+                            workout.Exercises[row + 1] = exercise;
+                            workout.Exercises[row] = lowerExercise;
+
+                            await repository.SaveWorkoutsAsync(this.Workouts);
+
+                            DisplayExercisesOfTheWorkout(workout);
+
+                            //var controlsLower = DynamicGrid.Children.OfType<IView>().Where(i => DynamicGrid.GetRow(i) == row + 1).ToList();
+
+                            //foreach (var control in controlsLower)
+                            //{
+                            //    DynamicGrid.SetRow(control, row);
+                            //}
+                                
+                            //foreach (var control in controls)
+                            //{
+                            //    DynamicGrid.SetRow(control, row + 1);
+                            //}
+
+                            // jak wyżej
+                        }
+                        else
+                        {
+                            await DisplayAlert("Workout Diary", "This exercise is already at the bottom.", "Ok");
+                        }
+                        break;
                 }
-
             };
 
             DynamicGrid.Add(nameLabel, 0, row);
@@ -551,6 +620,11 @@ public partial class WorkoutPlanning : ContentPage
                 var exercises = await repository.GetExercisesAsync();
                 exercises.AddRange(workout.Exercises);
                 await repository.SaveExercisesAsync(exercises);
+
+                if (MainPage.isDiaryLoaded)
+                {
+                    Diary.Exercises = exercises;
+                }
 
                 await DisplayAlert("Workout Diary", "Workout done, you can see it in the \"Diary\" section", "Ok");
             }
