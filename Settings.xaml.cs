@@ -266,10 +266,16 @@ public partial class Settings : ContentPage
 
 		var sessions = await repository.GetExercisesAsync();
 
-		var exercises = sessions.Select(s => s.Name).ToList();
+        var muscleNames = await repository.GetMusclesAsync();
+
+        var exercises = sessions.Select(s => s.Name).ToList();
 
 		exercises = exercises.GroupBy(e => e).OrderByDescending(g => g.Count())
 			.SelectMany(o => o).Distinct().ToList();
+
+		exercises.AddRange(muscleNames);
+
+		exercises = exercises.Distinct().ToList();
 
 		//var tasks = new List<Task>();
 
@@ -329,6 +335,13 @@ public partial class Settings : ContentPage
 						session.Name = newName;
 					}
 
+					var muscles = await repository.GetMusclesAsync();
+
+					muscles.Remove(exercise);
+					muscles.Add(newName);
+
+					await repository.SaveMusclesAsync(muscles);
+
 					await repository.SaveExercisesAsync(sessions);
 
 					deleteButton.IsEnabled = nameLabel.IsVisible = true;
@@ -366,11 +379,24 @@ public partial class Settings : ContentPage
 
 				if (toDelete)
 				{
-					sessions.RemoveAll(s => s.Name == exercise);
+                    row = exercises.IndexOf(exercise);
+
+                    sessions.RemoveAll(s => s.Name == exercise);
 
 					await repository.SaveExercisesAsync(sessions);
 
-					row = exercises.IndexOf(exercise);
+					var muscles = await repository.GetMusclesAsync();
+
+					muscles.Remove(exercise);
+
+					await repository.SaveMusclesAsync(muscles);
+
+					// KONIECZNIE DO ZROBIENIA!!!!!!
+
+					//if (MainPage.isDiaryLoaded)
+					//{
+					//	await Diary.UpdateMuscleSelector(muscles);
+					//}
 
                     MuscleGrid.RowDefinitions.RemoveAt(row);
 

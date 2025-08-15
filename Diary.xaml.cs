@@ -84,6 +84,11 @@ public partial class Diary : ContentPage
 		// metoda pomocnicza do obejścia ograniczeń konstruktora
 	}
 
+	public async Task UpdateMuscleSelector(List<string> items)
+	{
+		this.MuscleSelector.ItemsSource = items;
+	}
+
     private async void AddButton_Clicked()
     {
 		var isCustomAndNull = isNameCustom && 
