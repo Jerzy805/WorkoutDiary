@@ -8,6 +8,7 @@ namespace TrainingDiary
     public partial class MainPage : ContentPage
     {
         private readonly IRepository repository;
+        private static MainPage instance;
         private User? user;
         public static double fontSize;
         public static Label WelcomeLabel2;
@@ -286,6 +287,13 @@ namespace TrainingDiary
             }
 
             WelcomeLabel2.Text = text;
+
+            instance = this;
+        }
+
+        public MainPage GetMainPage()
+        {
+            return instance;
         }
 
         private void UpdateFontSize()
