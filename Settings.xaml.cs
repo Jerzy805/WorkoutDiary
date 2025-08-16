@@ -8,8 +8,6 @@ public partial class Settings : ContentPage
 	private readonly IRepository repository;
 	private static Settings instance;
 	public static User ? user;
-	//private static Button ChangeStatsButton;
-	private static Grid MuscleInputGrid;
 
 	public Settings()
 	{
@@ -30,21 +28,6 @@ public partial class Settings : ContentPage
 		LastUpdateLabel.FontSize = 19 * MainPage.fontSize;
 
         ChangeStatsButton.FontSize = 24 * MainPage.fontSize;
-
-        MuscleInputGrid = new Grid
-        {
-            ColumnSpacing = 10,
-            RowSpacing = 20,
-            IsVisible = false
-        };
-
-        MuscleInputGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
-        MuscleInputGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        MuscleInputGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        MuscleInputGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        MuscleInputGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-		stackLayout.Children.Add(MuscleInputGrid);
 
         var controls = UserGrid.Children;
 

@@ -98,6 +98,21 @@
                          IsVisible="False"/>
             </Grid>
 
+            <Grid x:Name="MuscleInputGrid"
+                  ColumnSpacing="10"
+                  RowSpacing="20"
+                  IsVisible="False">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+            </Grid>
+
         </StackLayout>
     </ScrollView>
 </ContentPage>
