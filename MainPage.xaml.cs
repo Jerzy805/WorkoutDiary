@@ -54,8 +54,9 @@ namespace TrainingDiary
 
                 if (isDiaryLoaded)
                 {
-                    Diary.UpdateButtonsFontSize();
-                    Diary.UpdateLabelsFontSize();
+                    var diary = Diary.GetDiary();
+                    diary.UpdateButtonsFontSize();
+                    diary.UpdateLabelsFontSize();
                     // rozpatrzyć redukcję do jednej funkcji o nazwie UpdateFontSize
                 }
 

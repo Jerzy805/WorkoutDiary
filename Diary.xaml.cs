@@ -6,12 +6,12 @@ public partial class Diary : ContentPage
 {
 	private readonly IRepository repository;
 	private static Diary instance;
-	public static List<Exercise> Exercises; // uzyskane poprzez async voida
-	public static bool isByName;
-	public static bool isNameCustom;
-	public static Button AddButton;
-	public static Button NameDateButton;
-	public static Grid DynamicGrid;
+	public List<Exercise> Exercises;
+	public bool isByName;
+	public bool isNameCustom;
+	//public Button AddButton;
+	//public Button NameDateButton;
+	//public Grid DynamicGrid;
 	
 	public Diary()
 	{
@@ -35,44 +35,28 @@ public partial class Diary : ContentPage
         isByName = false;
 		isNameCustom = false;
 
-		AddButton = new Button();
-		AddButton.Text = "Add";
-		AddButton.BackgroundColor = Colors.LightGreen;
-		AddButton.Clicked += (sender, e) =>
-		{
-			AddButton_Clicked();
-        };
+		//AddButton = new Button();
+		//AddButton.Text = "Add";
+		//AddButton.BackgroundColor = Colors.LightGreen;
+		//AddButton.Clicked += (sender, e) =>
+		//{
+		//	//AddButton_Clicked(sender, e);
+		//      };
 
-		NameDateButton = new Button();
-		NameDateButton.Text = "Name";
-		NameDateButton.Clicked += (sender, e) =>
-		{
-			NameDateButton_Clicked();
-        };
+		//InputGrid.Add(AddButton, 0, 3);
+		//InputGrid.SetColumnSpan(AddButton, 3);
 
-		InputGrid.Add(AddButton, 0, 3);
-		InputGrid.SetColumnSpan(AddButton, 3);
+		//NameDateButton = new Button();
+		//NameDateButton.Text = "Name";
+		//NameDateButton.Clicked += (sender, e) =>
+		//{
+		//	NameDateButton_Clicked();
+		//};
 
-		InputGrid.Add(NameDateButton, 1, 5);
-		InputGrid.SetColumnSpan(NameDateButton, 2);
+		//InputGrid.Add(NameDateButton, 1, 5);
+		//InputGrid.SetColumnSpan(NameDateButton, 2);
 
-        DynamicGrid = new Grid
-        {
-            ColumnSpacing = 10,
-            RowSpacing = 15
-        };
-
-        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
-        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-		stackLayout.Children.Add(DynamicGrid);
-
-        UpdateButtonsFontSize();
-
-		//DateSelectorChange();
+		UpdateButtonsFontSize();
 
 		MainPage.isDiaryLoaded = true;
 
@@ -86,12 +70,6 @@ public partial class Diary : ContentPage
 		return instance;
 	}
 
-	private async void GetExercises()
-	{
-		Exercises = await repository.GetExercisesAsync();
-		// metoda pomocnicza do obejścia ograniczeń konstruktora
-	}
-
 	public void UpdateMuscleSelector(List<string> items)
 	{
 		this.MuscleSelector.ItemsSource = items;
@@ -102,7 +80,7 @@ public partial class Diary : ContentPage
 		this.ExerciseNamePicker.ItemsSource = items;
 	}
 
-    private async void AddButton_Clicked()
+    private async void AddButton_Clicked(object sender, EventArgs e)
     {
 		var isCustomAndNull = isNameCustom && 
 			ExerciseNameEntry.Text.Trim() == string.Empty;
@@ -159,7 +137,7 @@ public partial class Diary : ContentPage
 		}
     }
 
-    private void NameDateButton_Clicked()
+    private void NameDateButton_Clicked(object sender, EventArgs e)
     {
 		if (isByName)
 		{
@@ -191,13 +169,13 @@ public partial class Diary : ContentPage
         }
     }
 
-	public static void UpdateButtonsFontSize()
+	public void UpdateButtonsFontSize()
 	{
 		NameDateButton.FontSize = 20 * MainPage.fontSize;
         AddButton.FontSize = 20 * MainPage.fontSize;
     }
 
-	public static void UpdateLabelsFontSize()
+	public void UpdateLabelsFontSize()
 	{
 		var labels = DynamicGrid.OfType<Label>();
 

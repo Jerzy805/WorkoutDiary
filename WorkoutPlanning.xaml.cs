@@ -636,7 +636,8 @@ public partial class WorkoutPlanning : ContentPage
 
                 if (MainPage.isDiaryLoaded)
                 {
-                    Diary.Exercises = exercises;
+                    var diary = Diary.GetDiary();
+                    diary.Exercises = exercises;
                 }
 
                 await DisplayAlert("Workout Diary", "Workout done, you can see it in the \"Diary\" section", "Ok");

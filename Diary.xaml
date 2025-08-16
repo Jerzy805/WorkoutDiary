@@ -71,30 +71,30 @@
                 </Border>
 
                 <Border
-        Grid.Column="2"
-        Grid.Row="1">
+                    Grid.Column="2"
+                    Grid.Row="1">
 
                     <Entry x:Name="RepsEntry"
-               FontSize="20"
-               Placeholder="Reps"
-               Keyboard="Numeric"/>
+                       FontSize="20"
+                       Placeholder="Reps"
+                       Keyboard="Numeric"/>
 
                 </Border>
 
                 <Border
-        Grid.Column="3"
-        Grid.ColumnSpan="2"
-        Grid.Row="2">
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="2">
 
                     <DatePicker x:Name="DateEntry"
-               FontSize="20"/>
+                       FontSize="20"/>
 
                 </Border>
 
                 <Border
-                Grid.Column="3"
-                Grid.ColumnSpan="2"
-                Grid.Row="1">
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="1">
 
                     <Entry x:Name="WeightEntry"
                        Grid.ColumnSpan="2"
@@ -104,9 +104,9 @@
                 </Border>
 
                 <Border
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                Grid.Row="2">
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="2">
 
                     <Entry x:Name="CommentEntry"
                        Placeholder="Comment"
@@ -122,12 +122,27 @@
                    HorizontalTextAlignment="Start"
                    VerticalTextAlignment="End"/>
 
+                <Button x:Name="AddButton"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Grid.Row="3"
+                        Text="Add"
+                        BackgroundColor="LightGreen"
+                        Clicked="AddButton_Clicked"/>
+
+                <Button x:Name="NameDateButton"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="5"
+                        Text="Name"
+                        Clicked="NameDateButton_Clicked"/>
+
                 <BoxView
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand" 
-                VerticalOptions="FillAndExpand"
-                Grid.Row="4"
-                Grid.ColumnSpan="5"/>
+                    HeightRequest="1"
+                    HorizontalOptions="FillAndExpand" 
+                    VerticalOptions="FillAndExpand"
+                    Grid.Row="4"
+                    Grid.ColumnSpan="5"/>
 
                 <Label Grid.Column="0"
                    Grid.Row="5"
@@ -135,9 +150,9 @@
                    Text="Trainings by:"/>
 
                 <Border
-                Grid.Column="3"
-                Grid.ColumnSpan="2"
-                Grid.Row="5">
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="5">
 
                     <DatePicker x:Name="DateSelector"
                             DateSelected="DateSelector_DateSelected"
@@ -147,38 +162,52 @@
                 </Border>
 
                 <Border
-                Grid.Column="3"
-                Grid.ColumnSpan="2"
-                Grid.Row="5">
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="5">
 
                     <Picker x:Name="MuscleSelector"
                         SelectedIndexChanged="MuscleSelector_SelectedIndexChanged"
-                            Grid.ColumnSpan="2"
-                            FontSize="20"
+                        Grid.ColumnSpan="2"
+                        FontSize="20"
                         Title="Exercise"/>
 
                 </Border>
 
 
                 <Label x:Name="NameDateLabel" 
-               Grid.Column="0"
-               Grid.Row="6"
-               FontSize="25"
-               Text="Exercise"
+                   Grid.Column="0"
+                   Grid.Row="6"
+                   FontSize="25"
+                   Text="Exercise"
                    Margin="0, 0, 0, 20"/>
 
                 <Label Grid.Column="1"
-               Grid.Row="6"
-               FontSize="25"
-               Text="Sets"
+                   Grid.Row="6"
+                   FontSize="25"
+                   Text="Sets"
                    Margin="0, 0, 0, 20"/>
 
                 <Label Grid.Column="2"
                    Grid.ColumnSpan="2"
-               Grid.Row="6"
-               FontSize="25"
-               Text="Reps"
+                   Grid.Row="6"
+                   FontSize="25"
+                   Text="Reps"
                    Margin="0, 0, 0, 20"/>
+
+            </Grid>
+
+            <Grid x:Name="DynamicGrid"
+                  ColumnSpacing="10"
+                  RowSpacing="15">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
             </Grid>
 

@@ -365,9 +365,9 @@ public partial class Settings : ContentPage
                         var diary = Diary.GetDiary();
                         diary.UpdateMuscleSelector(muscles);
                         diary.UpdateExerciseNamePicker(muscles);
-                        Diary.Exercises = sessions;
+                        diary.Exercises = sessions;
 
-                        if (Diary.isByName)
+                        if (diary.isByName)
                         {
                             diary.MuscleSelectorChange();
                         }
@@ -424,9 +424,9 @@ public partial class Settings : ContentPage
 						var diary = Diary.GetDiary();
 						diary.UpdateMuscleSelector(muscles);
 						diary.UpdateExerciseNamePicker(muscles);
-						Diary.Exercises = sessions;
+						diary.Exercises = sessions;
 
-						if (Diary.isByName)
+						if (diary.isByName)
 						{
 							diary.MuscleSelectorChange();
 						}
