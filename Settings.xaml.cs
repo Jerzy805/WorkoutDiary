@@ -187,7 +187,8 @@ public partial class Settings : ContentPage
                 text = $"Weight to gain{suffix}";
             }
 
-            MainPage.WelcomeLabel2.Text = text;
+			var mainPage = MainPage.GetMainPage();
+			mainPage.UpdateWelcomeLabelText(text);
 			
 			if (MainPage.isProgressTrackingLoaded)
 			{

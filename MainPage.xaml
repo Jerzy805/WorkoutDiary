@@ -27,8 +27,24 @@
                 </Grid.ColumnDefinitions>
 
             </Grid>
-            
-            
+
+            <Label x:Name="WelcomeLabel2"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Margin="0, 15"/>
+
+            <Slider x:Name="FontSizeSlider"
+                    Minimum="0.8"
+                    Maximum="1.8"
+                    Margin="15"
+                    ValueChanged="FontSizeValueChanged"
+                    DragCompleted="FontSizeSliderDragCompleted"/>
+
+            <Label x:Name="InfoLabel"
+                   HorizontalOptions="Center"
+                   Margin="15"
+                   Text="Font size"/>
+
         </StackLayout>
         
     </ScrollView>
