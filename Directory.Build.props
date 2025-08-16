@@ -1,9 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <AndroidKeyStore>true</AndroidKeyStore>
-    <AndroidSigningKeyStore>$(MSBuildProjectDirectory)\ChmielApp.keystore</AndroidSigningKeyStore>
-    <AndroidSigningStorePass>12Rekinek34</AndroidSigningStorePass>
-    <AndroidSigningKeyAlias>chmielalias</AndroidSigningKeyAlias>
-    <AndroidSigningKeyPass>12Rekinek34</AndroidSigningKeyPass>
-  </PropertyGroup>
-</Project>
