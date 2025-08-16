@@ -359,6 +359,30 @@ public partial class Settings : ContentPage
 					//exercise = newName;
 
 					nameLabel.Text = $"{newName}: {count}";
+
+                    if (MainPage.isDiaryLoaded)
+                    {
+                        var diary = Diary.GetDiary();
+                        diary.UpdateMuscleSelector(muscles);
+                        diary.UpdateExerciseNamePicker(muscles);
+                        Diary.Exercises = sessions;
+
+                        if (Diary.isByName)
+                        {
+                            diary.MuscleSelectorChange();
+                        }
+                        else
+                        {
+                            diary.DateSelectorChange();
+                        }
+                    }
+
+                    if (MainPage.isWorkoutPlanningLoaded)
+                    {
+                        var workoutPlanning = WorkoutPlanning.GetWorkoutPlanning();
+
+                        workoutPlanning.UpdateExerciseNamePicker(muscles);
+                    }
                 };
 
 				await Task.Run(() =>
