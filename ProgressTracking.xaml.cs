@@ -94,7 +94,7 @@ public partial class ProgressTracking : ContentPage
 			infoButton.Text = "ⓘ";
             infoButton.Clicked += async (sender, e) =>
 			{
-				var toKeep = await Application.Current.MainPage.DisplayAlert(progressElement.LastUpdated, $"Weight at that time: {weightLabel.Text}" +
+				var toKeep = await DisplayAlert(progressElement.LastUpdated, $"Weight at that time: {weightLabel.Text}" +
 					Environment.NewLine + $"Height: {progressElement.GetHeight()}{Environment.NewLine}" +
 					$"BMI: {bmiLabel.Text}{Environment.NewLine}" +
 					$"Target weight at that time: {progressElement.GetGoalWeight()}", "Ok", "Delete");
@@ -103,14 +103,14 @@ public partial class ProgressTracking : ContentPage
 				{
 					if (Progress.Count == 1)
 					{
-						await Application.Current.MainPage.DisplayAlert("Workout diary", "You can't delete the only progres record, " +
+						await DisplayAlert("Workout diary", "You can't delete the only progres record, " +
                             "change your stats in \"Settings\"", "Ok");
 						return;
 
 						// żeby nie usunęło jedynego zapisu
 					}
 
-					var toDelete = await Application.Current.MainPage.DisplayAlert("Action confirm", "Do you really want to delete this record?", "Yes", "No");
+					var toDelete = await DisplayAlert("Action confirm", "Do you really want to delete this record?", "Yes", "No");
 
 					if (toDelete)
 					{
