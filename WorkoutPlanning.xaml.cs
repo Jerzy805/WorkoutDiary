@@ -7,6 +7,7 @@ namespace TrainingDiary;
 public partial class WorkoutPlanning : ContentPage
 {
 	private readonly IRepository repository;
+    private static WorkoutPlanning instance;
 	private List<Workout> Workouts;
 	private List<Exercise> currentExercises;
 	private static bool isCustom;
@@ -58,6 +59,18 @@ public partial class WorkoutPlanning : ContentPage
         stackLayout.Children.Add(DynamicGrid);
 
         MainPage.isWorkoutPlanningLoaded = true;
+
+        instance = this;
+    }
+
+    public static WorkoutPlanning GetWorkoutPlanning()
+    {
+        return instance;
+    }
+
+    public void UpdateExerciseNamePicker(List<string> items)
+    {
+        this.ExerciseNamePicker.ItemsSource = items;
     }
 
     public static void UpdateFontSize()

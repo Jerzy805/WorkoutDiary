@@ -5,6 +5,7 @@ namespace TrainingDiary;
 public partial class Diary : ContentPage
 {
 	private readonly IRepository repository;
+	private static Diary instance;
 	public static List<Exercise> Exercises; // uzyskane poprzez async voida
 	public static bool isByName;
 	public static bool isNameCustom;
@@ -76,12 +77,29 @@ public partial class Diary : ContentPage
 		MainPage.isDiaryLoaded = true;
 
 		DateSelectorChange();
+
+		instance = this;
     }
+
+	public static Diary GetDiary()
+	{
+		return instance;
+	}
 
 	private async void GetExercises()
 	{
 		Exercises = await repository.GetExercisesAsync();
 		// metoda pomocnicza do obejścia ograniczeń konstruktora
+	}
+
+	public void UpdateMuscleSelector(List<string> items)
+	{
+		this.MuscleSelector.ItemsSource = items;
+	}
+
+	public void UpdateExerciseNamePicker(List<string> items)
+	{
+		this.ExerciseNamePicker.ItemsSource = items;
 	}
 
     private async void AddButton_Clicked()
@@ -219,7 +237,7 @@ public partial class Diary : ContentPage
 		MuscleSelectorChange();
 	}
 
-	private void MuscleSelectorChange()
+	public void MuscleSelectorChange()
 	{
         if (MuscleSelector.SelectedItem == null)
         {
@@ -232,7 +250,7 @@ public partial class Diary : ContentPage
         DisplayExercises(exercises);
     }
 
-    private void DateSelectorChange()
+    public void DateSelectorChange()
 	{
 		var exercises = Exercises.Where(e => e.Date.DayOfYear == DateSelector.Date.DayOfYear
 				&& e.Date.Year == DateSelector.Date.Year).ToList();
@@ -332,28 +350,31 @@ public partial class Diary : ContentPage
 						tasks.Add(task);
 					}
 
-                    var controlsToPushUp = DynamicGrid.Children.Where(c => DynamicGrid.GetRow(c) > row);
-
-					if (controlsToPushUp.Any())
+					if (DynamicGrid.RowDefinitions.Count > row + 1)
 					{
-                        foreach (var control in controlsToPushUp)
-                        {
-                            var task = Task.Run(async () =>
-                            {
-                                await bindableObject.Dispatcher.DispatchAsync(() =>
-                                {
-                                    int currentRow = DynamicGrid.GetRow(control);
-                                    DynamicGrid.SetRow(control, currentRow - 1);
-                                });
-                            });
+                        var controlsToPushUp = DynamicGrid.Children.Where(c => DynamicGrid.GetRow(c) > row);
 
-                            tasks.Add(task);
+                        if (controlsToPushUp.Any())
+                        {
+                            foreach (var control in controlsToPushUp)
+                            {
+                                var task = Task.Run(async () =>
+                                {
+                                    await bindableObject.Dispatcher.DispatchAsync(() =>
+                                    {
+                                        int currentRow = DynamicGrid.GetRow(control);
+                                        DynamicGrid.SetRow(control, currentRow - 1);
+                                    });
+                                });
+
+                                tasks.Add(task);
+                            }
                         }
                     }
 
                     await Task.WhenAll(tasks);
 
-					DynamicGrid.RowDefinitions.RemoveAt(exercises.Count - 1);
+					DynamicGrid.RowDefinitions.RemoveAt(DynamicGrid.RowDefinitions.Count - 1);
 
                     //DynamicGrid.RowDefinitions.RemoveAt(row);
 				}

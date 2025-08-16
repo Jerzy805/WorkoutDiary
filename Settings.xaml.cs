@@ -266,10 +266,16 @@ public partial class Settings : ContentPage
 
 		var sessions = await repository.GetExercisesAsync();
 
-		var exercises = sessions.Select(s => s.Name).ToList();
+        var muscleNames = await repository.GetMusclesAsync();
+
+        var exercises = sessions.Select(s => s.Name).ToList();
 
 		exercises = exercises.GroupBy(e => e).OrderByDescending(g => g.Count())
 			.SelectMany(o => o).Distinct().ToList();
+
+		exercises.AddRange(muscleNames);
+
+		exercises = exercises.Distinct().ToList();
 
 		//var tasks = new List<Task>();
 
@@ -329,6 +335,13 @@ public partial class Settings : ContentPage
 						session.Name = newName;
 					}
 
+					var muscles = await repository.GetMusclesAsync();
+
+					muscles.Remove(exercise);
+					muscles.Add(newName);
+
+					await repository.SaveMusclesAsync(muscles);
+
 					await repository.SaveExercisesAsync(sessions);
 
 					deleteButton.IsEnabled = nameLabel.IsVisible = true;
@@ -366,19 +379,67 @@ public partial class Settings : ContentPage
 
 				if (toDelete)
 				{
-					sessions.RemoveAll(s => s.Name == exercise);
+					var sessionsToRemoveCount = sessions.Where(s => s.Name == exercise).Count();
 
-					await repository.SaveExercisesAsync(sessions);
+                    if (sessionsToRemoveCount > 0)
+					{
+						sessions.RemoveAll(s => s.Name == exercise);
+                        await repository.SaveExercisesAsync(sessions);
+                    }
 
-					row = exercises.IndexOf(exercise);
+					var muscles = await repository.GetMusclesAsync();
 
-                    MuscleGrid.RowDefinitions.RemoveAt(row);
+					muscles.Remove(exercise);
 
-                    MuscleGrid.Remove(nameLabel);
-					MuscleGrid.Remove(editButton);
-					MuscleGrid.Remove(deleteButton);
-				}
-			};
+					await repository.SaveMusclesAsync(muscles);
+
+					// KONIECZNIE DO ZROBIENIA!!!!!!
+
+					if (MainPage.isDiaryLoaded)
+					{
+						var diary = Diary.GetDiary();
+						diary.UpdateMuscleSelector(muscles);
+						diary.UpdateExerciseNamePicker(muscles);
+						Diary.Exercises = sessions;
+
+						if (Diary.isByName)
+						{
+							diary.MuscleSelectorChange();
+						}
+						else
+						{
+							diary.DateSelectorChange();
+						}
+					}
+
+					if (MainPage.isWorkoutPlanningLoaded)
+					{
+						var workoutPlanning = WorkoutPlanning.GetWorkoutPlanning();
+
+						workoutPlanning.UpdateExerciseNamePicker(muscles);
+					}
+
+					var controlsToRemove = MuscleInputGrid.OfType<IView>().Where(i => MuscleGrid.GetRow(i) == row).ToList();
+
+					foreach (var control in controlsToRemove)
+					{
+						MuscleInputGrid.Children.Remove(control);
+					}
+
+                    var controlsToPushUp = MuscleInputGrid.Children.OfType<IView>().Where(i => MuscleInputGrid.GetRow(i) > row).ToList();
+
+					if (!controlsToPushUp.Any())
+						return;
+
+					foreach (var control in controlsToPushUp)
+					{
+						var currentRow = MuscleInputGrid.GetRow(control);
+						MuscleInputGrid.SetRow(control, currentRow - 1);
+					}
+
+                    MuscleInputGrid.RowDefinitions.RemoveAt(MuscleInputGrid.RowDefinitions.Count - 1);
+                }
+            };
 
 			await Task.Run(() =>
 			{
