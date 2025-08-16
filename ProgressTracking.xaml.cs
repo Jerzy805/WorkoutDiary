@@ -1,7 +1,4 @@
-﻿using Microsoft.Maui;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.PlatformConfiguration.GTKSpecific;
-using TrainingDiary.Interfaces;
+﻿using TrainingDiary.Interfaces;
 using TrainingDiary.Models;
 using BoxView = Microsoft.Maui.Controls.BoxView;
 
@@ -9,68 +6,45 @@ namespace TrainingDiary;
 
 public partial class ProgressTracking : ContentPage
 {
-	private readonly static IRepository repository = new Repository();
-    public static List<User> Progress;
-    public static Label DateLabel;
-	public static Label WeightLabel;
-	public static Label BmiLabel;
-	public static Button RefreshButton;
-	public static BoxView _BoxView;
-	public static Grid DynamicGrid;
+	private readonly IRepository repository;
+	private static ProgressTracking instance;
+    public List<User> Progress;
 
 	public ProgressTracking()
 	{
 		InitializeComponent();
 
-		//repository = new Repository();
+		repository = new Repository();
 
-        Progress = repository.GetProgress();
-
-        DateLabel = new Label();
-        WeightLabel = new Label();
-        BmiLabel = new Label();
-		RefreshButton = new Button();
-        _BoxView = new BoxView();
+		Progress = repository.GetProgress();
 
 		GetStaticGridReady();
-
-        DynamicGrid = new Grid();
-
-		GetProgressGridReady();
 
         DisplayProgress();
 
 		MainPage.isProgressTrackingLoaded = true;
+
+		instance = this;
+	}
+
+	public static ProgressTracking GetProgressTracking()
+	{
+		return instance;
 	}
 
 	private void GetStaticGridReady()
 	{
-		StaticGrid.Margin = new Thickness(0, 0, 0, 20);
-
         DateLabel.FontSize = 25 * MainPage.fontSize;
-        DateLabel.Text = "Date";
 
         WeightLabel.FontSize = 25 * MainPage.fontSize;
-        WeightLabel.Text = "Weight";
 
         BmiLabel.FontSize = 25 * MainPage.fontSize;
-        BmiLabel.Text = "BMI";
 
 		RefreshButton.FontSize = 25 * MainPage.fontSize;
-		RefreshButton.Text = "⟲";
-		RefreshButton.Clicked += async (sender, e) =>
+		RefreshButton.Clicked += (sender, e) =>
 		{
             DisplayProgress();
 		};
-
-        _BoxView.HeightRequest = 1;
-
-        StaticGrid.Add(DateLabel, 0, 0);
-        StaticGrid.Add(WeightLabel, 1, 0);
-        StaticGrid.Add(BmiLabel, 2, 0);
-		StaticGrid.Add(RefreshButton, 3, 0);
-        StaticGrid.Add(_BoxView, 0, 1);
-		StaticGrid.SetColumnSpan(_BoxView, 4);
 
 		if (Progress.Count == 0)
 		{
@@ -87,20 +61,7 @@ public partial class ProgressTracking : ContentPage
         }
     }
 
-	private void GetProgressGridReady()
-	{
-		stackLayout.Children.Add(DynamicGrid);
-
-        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(35, GridUnitType.Star) });
-        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(25, GridUnitType.Star) });
-        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(25, GridUnitType.Star) });
-        DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(15, GridUnitType.Star) });
-
-        DynamicGrid.RowSpacing = 10;
-        DynamicGrid.ColumnSpacing = 15;
-    }
-
-    public static void DisplayProgress()
+    public void DisplayProgress()
 	{
 		if (Progress.Count == 0)
 		{
@@ -201,7 +162,7 @@ public partial class ProgressTracking : ContentPage
 		}
 	}
 
-	public static void UpdateFontSize()
+	public void UpdateFontSize()
 	{
 		var staticControls = new List<View>()
 		{

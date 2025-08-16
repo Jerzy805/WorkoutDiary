@@ -191,8 +191,9 @@ public partial class Settings : ContentPage
 			
 			if (MainPage.isProgressTrackingLoaded)
 			{
-                ProgressTracking.DisplayProgress();
-                ProgressTracking.Progress = await repository.GetProgressAsync();
+				var progressTracking = ProgressTracking.GetProgressTracking();
+                progressTracking.DisplayProgress();
+                progressTracking.Progress = await repository.GetProgressAsync();
             }
         };
 

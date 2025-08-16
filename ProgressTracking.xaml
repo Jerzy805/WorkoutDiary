@@ -8,7 +8,8 @@
 
             <Grid x:Name="StaticGrid"
                   RowSpacing="10"
-                  ColumnSpacing="15">
+                  ColumnSpacing="15"
+                  Margin="0, 0, 0, 20">
                 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="35*"/>
@@ -21,7 +22,46 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
+
+                <Label x:Name="DateLabel"
+                       Grid.Column="0"
+                       Grid.Row="0"
+                       Text="Date"/>
+
+                <Label x:Name="WeightLabel"
+                       Grid.Column="1"
+                       Grid.Row="0"
+                       Text="Weight"/>
+
+                <Label x:Name="BmiLabel"
+                       Grid.Column="2"
+                       Grid.Row="0"
+                       Text="BMI"/>
+
+                <Button x:Name="RefreshButton"
+                        Grid.Column="3"
+                        Grid.Row="0"
+                        Text="⟲"/>
+
+                <BoxView x:Name="_BoxView"
+                         Grid.Column="0"
+                         Grid.Row="1"
+                         Grid.ColumnSpan="4"
+                         HeightRequest="1"/>
+
+            </Grid>
+
+            <Grid x:Name="DynamicGrid"
+                  ColumnSpacing="15"
+                  RowSpacing="10">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="35*"/>
+                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition Width="15*"/>
+                </Grid.ColumnDefinitions>
+
             </Grid>
 
         </StackLayout>

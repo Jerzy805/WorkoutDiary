@@ -67,7 +67,8 @@ namespace TrainingDiary
 
                 if (isProgressTrackingLoaded)
                 {
-                    ProgressTracking.UpdateFontSize();
+                    var progressTracking = ProgressTracking.GetProgressTracking();
+                    progressTracking.UpdateFontSize();
                 }
                  
                 if (isSettingsLoaded)
