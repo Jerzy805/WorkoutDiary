@@ -8,10 +8,7 @@ public partial class Settings : ContentPage
 	private readonly IRepository repository;
 	private static Settings instance;
 	public static User ? user;
-	//private Label HeightLabel;
-	private static Label GoalWeightLabel;
-	private static Label LastUpdateLabel;
-	private static Button ChangeStatsButton;
+	//private static Button ChangeStatsButton;
 	private static Grid MuscleInputGrid;
 
 	public Settings()
@@ -28,31 +25,11 @@ public partial class Settings : ContentPage
 
 		HeightLabel.FontSize = 20 * MainPage.fontSize;
 
-        GoalWeightLabel = new Label
-        {
-            FontSize = 20 * MainPage.fontSize,
-            Margin = new Thickness(15, 0, 0, 0)
-        };
+        GoalWeightLabel.FontSize = 20 * MainPage.fontSize;
 
-		LastUpdateLabel = new Label
-		{
-			FontSize = 19 * MainPage.fontSize
-		};
+		LastUpdateLabel.FontSize = 19 * MainPage.fontSize;
 
-        ChangeStatsButton = new Button
-        {
-            Text = "Change Your Data",
-            FontSize = 24 * MainPage.fontSize,
-            Margin = new Thickness(45, 0)
-        };
-
-        UserGrid.Add(GoalWeightLabel, 0, 1);
-        UserGrid.Add(LastUpdateLabel, 1, 1);
-
-        UserGrid.Add(ChangeStatsButton, 0, 2);
-        UserGrid.SetColumnSpan(ChangeStatsButton, 2);
-
-        ChangeStatsButton.Clicked += ChangeStatsButton_Clicked;
+        ChangeStatsButton.FontSize = 24 * MainPage.fontSize;
 
         MuscleInputGrid = new Grid
         {
