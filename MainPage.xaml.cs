@@ -72,7 +72,8 @@ namespace TrainingDiary
                  
                 if (isSettingsLoaded)
                 {
-                    Settings.UpdateFontSize();
+                    var settings = Settings.GetSettings();
+                    settings.UpdateFontSize();
                 }
             };
 

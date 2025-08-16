@@ -6,10 +6,9 @@ namespace TrainingDiary;
 public partial class Settings : ContentPage
 {
 	private readonly IRepository repository;
+	private static Settings instance;
 	public static User ? user;
-	private static Label UserNullLabel;
-	private static Label WeightLabel;
-	private static Label HeightLabel;
+	//private Label HeightLabel;
 	private static Label GoalWeightLabel;
 	private static Label LastUpdateLabel;
 	private static Button ChangeStatsButton;
@@ -23,23 +22,11 @@ public partial class Settings : ContentPage
 
 		user = repository.GetUser()!;
 
-        UserNullLabel = new Label
-        {
-            FontSize = 20 * MainPage.fontSize,
-            IsVisible = false
-        };
+		UserNullLabel.FontSize = 20 * MainPage.fontSize;
 
-        WeightLabel = new Label
-        {
-            FontSize = 20 * MainPage.fontSize,
-            Margin = new Thickness(15, 0, 0, 0)
-        };
+		WeightLabel.FontSize = 20 * MainPage.fontSize;
 
-        HeightLabel = new Label
-        {
-            FontSize = 20 * MainPage.fontSize,
-            Margin = new Thickness(0, 0, 0, 15)
-        };
+		HeightLabel.FontSize = 20 * MainPage.fontSize;
 
         GoalWeightLabel = new Label
         {
@@ -59,11 +46,6 @@ public partial class Settings : ContentPage
             Margin = new Thickness(45, 0)
         };
 
-        UserGrid.Add(UserNullLabel, 0, 0);
-        UserGrid.SetColumnSpan(UserNullLabel, 2);
-
-        UserGrid.Add(WeightLabel, 0, 0);
-        UserGrid.Add(HeightLabel, 1, 0);
         UserGrid.Add(GoalWeightLabel, 0, 1);
         UserGrid.Add(LastUpdateLabel, 1, 1);
 
@@ -115,9 +97,16 @@ public partial class Settings : ContentPage
         LastUpdateLabel.Text = $"Last update: {user.LastUpdated}";
 
 		MainPage.isSettingsLoaded = true;
+
+		instance = this;
     }
 
-	public static void UpdateFontSize()
+	public static Settings GetSettings()
+	{
+		return instance;
+	}
+
+	public void UpdateFontSize()
 	{
 		var userLabels = new List<Label>()
 		{ 
