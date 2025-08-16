@@ -9,9 +9,6 @@ public partial class Diary : ContentPage
 	public List<Exercise> Exercises;
 	public bool isByName;
 	public bool isNameCustom;
-	//public Button AddButton;
-	//public Button NameDateButton;
-	//public Grid DynamicGrid;
 	
 	public Diary()
 	{
@@ -34,27 +31,6 @@ public partial class Diary : ContentPage
 
         isByName = false;
 		isNameCustom = false;
-
-		//AddButton = new Button();
-		//AddButton.Text = "Add";
-		//AddButton.BackgroundColor = Colors.LightGreen;
-		//AddButton.Clicked += (sender, e) =>
-		//{
-		//	//AddButton_Clicked(sender, e);
-		//      };
-
-		//InputGrid.Add(AddButton, 0, 3);
-		//InputGrid.SetColumnSpan(AddButton, 3);
-
-		//NameDateButton = new Button();
-		//NameDateButton.Text = "Name";
-		//NameDateButton.Clicked += (sender, e) =>
-		//{
-		//	NameDateButton_Clicked();
-		//};
-
-		//InputGrid.Add(NameDateButton, 1, 5);
-		//InputGrid.SetColumnSpan(NameDateButton, 2);
 
 		UpdateButtonsFontSize();
 
@@ -124,8 +100,6 @@ public partial class Diary : ContentPage
 
         ExerciseNameEntry.Text = SetsEntry.Text = RepsEntry.Text =
             WeightEntry.Text = CommentEntry.Text = string.Empty;
-
-		//DisplayExercises(Exercises);
 
 		if (isByName)
 		{
